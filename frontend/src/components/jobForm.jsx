@@ -89,8 +89,8 @@ export default function JobForm({ onSubmit }) {
             className="input p-2 border border-gray-300 rounded-lg w-full focus:border-black focus:outline-none"
             id="jobtype"
           >
-            <option value="Internship">Internship</option>
             <option value="Full Time">Full Time</option>
+            <option value="Internship">Internship</option>
             <option value="Part Time">Part Time</option>
             <option value="Contract">Contract</option>
           </select>
@@ -133,6 +133,7 @@ export default function JobForm({ onSubmit }) {
             type="date"
             name="date"
             onChange={handleChange}
+            required
             className="input p-2 border border-gray-300 rounded-lg w-full focus:border-black focus:outline-none"
           />
         </div>

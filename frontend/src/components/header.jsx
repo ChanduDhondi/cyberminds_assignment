@@ -72,10 +72,10 @@ export default function Header({ onCreateJobClick }) {
         <div className="flex items-center px-3 py-2 w-1/4">
           <img src={vector} alt="vector" className="text-gray-500 mr-2"></img>
           <select className="w-full outline-none">
-            <option>Job Type</option>
             <option>Full Time</option>
-            <option>Part Time</option>
             <option>Internship</option>
+            <option>Part Time</option>
+            <option>Contract</option>
           </select>
         </div>
 
