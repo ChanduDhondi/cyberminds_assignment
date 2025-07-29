@@ -10,7 +10,7 @@ export default function Header({ onCreateJobClick }) {
   const [salaryRange, setSalaryRange] = useState([50, 80]);
 
   return (
-    <header className="bg-white shadow ">
+    <header className="bg-white shadow">
       <div className="flex justify-center w-full pt-3">
         <div
           className="flex justify-center gap-3 items-center w-fit bg-white p-4 rounded-[4rem]"
@@ -42,9 +42,9 @@ export default function Header({ onCreateJobClick }) {
       </div>
 
       {/* Filter Section */}
-      <div className="flex items-stretch mt-6 bg-white p-3 rounded gap-6 divide-x divide-solid divide-gray-300">
+      <div className="flex items-stretch mt-6 bg-white px-8 py-3 rounded gap-6 divide-x divide-solid divide-gray-300">
         {/* Search Input */}
-        <div className="flex items-center  px-3 py-2 rounded w-1/4">
+        <div className="flex items-center gap-4 px-3 py-2 rounded w-1/4">
           <img src={search} alt="search" className="text-gray-500 mr-2"></img>
           <input
             type="text"
@@ -54,7 +54,7 @@ export default function Header({ onCreateJobClick }) {
         </div>
 
         {/* Preferred Location */}
-        <div className="flex items-center px-3 py-2 w-1/4">
+        <div className="flex items-center gap-4 px-3 py-2 w-1/4">
           <img
             src={location}
             alt="location"
@@ -69,7 +69,7 @@ export default function Header({ onCreateJobClick }) {
         </div>
 
         {/* Job Type */}
-        <div className="flex items-center px-3 py-2 w-1/4">
+        <div className="flex items-center gap-4 px-3 py-2 w-1/4">
           <img src={vector} alt="vector" className="text-gray-500 mr-2"></img>
           <select className="w-full outline-none">
             <option>Full Time</option>

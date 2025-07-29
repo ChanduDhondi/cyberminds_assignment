@@ -7,33 +7,61 @@ export default function JobForm({ onSubmit }) {
     title: "",
     companyName: "",
     location: "",
-    jobType: "",
+    jobType: "Full-Time",
     salaryMin: "",
     salaryMax: "",
-    date: "",
+    deadline: "",
     description: "",
   });
 
-  const handleChange = (e) =>
-    setJob({ ...job, [e.target.name]: e.target.value });
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    setJob((prevJob) => ({
+      ...prevJob,
+      [e.target.name]: e.target.value,
+    }));
+    setErrors((preError) => ({ ...preError, [e.target.name]: "" }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!job.title.trim()) newErrors.title = "Job title is required";
+    if (!job.companyName.trim())
+      newErrors.companyName = "Company name is required";
+    if (!job.location.trim()) newErrors.location = "Location is required";
+    if (!job.jobType.trim()) newErrors.jobType = "Job type is required";
+    if (!job.salaryMin) newErrors.salaryMin = "Minimum salary is required";
+    if (!job.salaryMax) newErrors.salaryMax = "Maximum salary is required";
+    if (Number(job.salaryMin) >= Number(job.salaryMax))
+      newErrors.salaryMax = "Max salary must be greater than Min salary";
+    if (!job.deadline) newErrors.date = "Application deadline is required";
+    if (!job.description.trim())
+      newErrors.description = "Description is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      onSubmit(job);
+    }
+  };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit(job);
-      }}
-      className="rounded-xl mx-auto"
-    >
+    <form onSubmit={handleSubmit} className="rounded-xl mx-auto">
       <h2 className="text-xl font-medium text-center pb-6">
         Create Job Opening
       </h2>
       <div className="grid grid-cols-2 gap-4">
+        {/* Job Title */}
         <div>
           <label
             htmlFor="title"
-            className="font-medium"
-            style={{ color: "rgba(34, 34, 34, 1)", fontSize: "1.2rem" }}
+            className="font-medium text-gray-900 text-[1.2rem]"
           >
             Job Title
           </label>
@@ -42,13 +70,18 @@ export default function JobForm({ onSubmit }) {
             onChange={handleChange}
             className="input p-2 border border-gray-300 rounded-lg w-full focus:border-black focus:outline-none"
             id="title"
+            value={job.title}
           />
+          {errors.title && (
+            <p className="text-red-500 text-sm">{errors.title}</p>
+          )}
         </div>
+
+        {/* Company Name */}
         <div>
           <label
             htmlFor="company"
-            className="font-medium"
-            style={{ color: "rgba(34, 34, 34, 1)", fontSize: "1.2rem" }}
+            className="font-medium text-gray-900 text-[1.2rem]"
           >
             Company Name
           </label>
@@ -57,13 +90,18 @@ export default function JobForm({ onSubmit }) {
             onChange={handleChange}
             className="input p-2 border border-gray-300 rounded-lg w-full focus:border-black focus:outline-none"
             id="company"
+            value={job.companyName}
           />
+          {errors.companyName && (
+            <p className="text-red-500 text-sm">{errors.companyName}</p>
+          )}
         </div>
+
+        {/* Location */}
         <div>
           <label
             htmlFor="location"
-            className="font-medium"
-            style={{ color: "rgba(34, 34, 34, 1)", fontSize: "1.2rem" }}
+            className="font-medium text-gray-900 text-[1.2rem]"
           >
             Location
           </label>
@@ -72,13 +110,18 @@ export default function JobForm({ onSubmit }) {
             onChange={handleChange}
             className="input p-2 border border-gray-300 rounded-lg w-full focus:border-black focus:outline-none"
             id="location"
+            value={job.location}
           />
+          {errors.location && (
+            <p className="text-red-500 text-sm">{errors.location}</p>
+          )}
         </div>
+
+        {/* Job Type */}
         <div>
           <label
             htmlFor="jobtype"
-            className="font-medium"
-            style={{ color: "rgba(34, 34, 34, 1)", fontSize: "1.2rem" }}
+            className="font-medium text-gray-900 text-[1.2rem]"
           >
             Job Type
           </label>
@@ -89,17 +132,21 @@ export default function JobForm({ onSubmit }) {
             className="input p-2 border border-gray-300 rounded-lg w-full focus:border-black focus:outline-none"
             id="jobtype"
           >
-            <option value="Full Time">Full Time</option>
+            <option value="Full-Time">Full Time</option>
             <option value="Internship">Internship</option>
-            <option value="Part Time">Part Time</option>
+            <option value="Part-Time">Part Time</option>
             <option value="Contract">Contract</option>
           </select>
+          {errors.jobType && (
+            <p className="text-red-500 text-sm">{errors.jobType}</p>
+          )}
         </div>
+
+        {/* Salary Range */}
         <div>
           <label
             htmlFor="salary"
-            className="font-medium"
-            style={{ color: "rgba(34, 34, 34, 1)", fontSize: "1.2rem" }}
+            className="font-medium text-gray-900 text-[1.2rem]"
           >
             Salary Range
           </label>
@@ -107,54 +154,72 @@ export default function JobForm({ onSubmit }) {
             <input
               name="salaryMin"
               type="number"
-              placeholder="&#8377; min"
+              placeholder="₹ min"
               onChange={handleChange}
+              value={job.salaryMin}
               className="input p-2 border border-gray-300 rounded-lg w-full focus:border-black focus:outline-none"
-              id="salary"
             />
             <input
               name="salaryMax"
               type="number"
-              placeholder="&#8377; max"
+              placeholder="₹ max"
               onChange={handleChange}
+              value={job.salaryMax}
               className="input p-2 border border-gray-300 rounded-lg w-full focus:border-black focus:outline-none"
             />
           </div>
+          {(errors.salaryMin || errors.salaryMax) && (
+            <p className="text-red-500 text-sm">
+              {errors.salaryMin || errors.salaryMax}
+            </p>
+          )}
         </div>
+
+        {/* Application Deadline */}
         <div>
           <label
             htmlFor="deadline"
-            className="font-medium"
-            style={{ color: "rgba(34, 34, 34, 1)", fontSize: "1.2rem" }}
+            className="font-medium text-gray-900 text-[1.2rem]"
           >
             Application Deadline
           </label>
           <input
             type="date"
-            name="date"
+            name="deadline"
             onChange={handleChange}
-            required
+            value={job.deadline}
             className="input p-2 border border-gray-300 rounded-lg w-full focus:border-black focus:outline-none"
+            id="deadline"
           />
+          {errors.deadline && (
+            <p className="text-red-500 text-sm">{errors.deadline}</p>
+          )}
         </div>
       </div>
+
+      {/* Job Description */}
       <div className="mt-2">
         <label
           htmlFor="description"
-          className="font-medium"
-          style={{ color: "rgba(34, 34, 34, 1)", fontSize: "1.2rem" }}
+          className="font-medium text-gray-900 text-[1.2rem]"
         >
           Job Description
         </label>
         <textarea
           name="description"
           onChange={handleChange}
+          value={job.description}
           placeholder="Please share a description to let the candidate know more about the job"
           className="input p-2 border border-gray-300 rounded-lg w-full focus:border-black focus:outline-none"
           rows="6"
           id="description"
         />
+        {errors.description && (
+          <p className="text-red-500 text-sm">{errors.description}</p>
+        )}
       </div>
+
+      {/* Buttons */}
       <div className="flex justify-between mt-6">
         <button type="button" className="border px-4 py-2 rounded-lg">
           Save Draft

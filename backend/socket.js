@@ -4,20 +4,23 @@ const Job = require("./models/jobModel");
 async function showJobs(io) {
   try {
     const allJobs = await Job.find().sort({ createdAt: -1 });
-    io.emit("show-jobs", { allJobs });
+    io.emit("show-jobs", allJobs);
   } catch (error) {
-    socket.emit("orderError", { error: "Failed to fetch orders" });
+    io.emit("orderError", { error: "Failed to fetch orders" });
   }
 }
 
 async function handleSocket(socket, io) {
   await showJobs(io);
-  socket.on("new-job-created", async (jobData) => {
+  socket.on("new-job-created", async (job) => {
     try {
-      const jobs = await Job.find().sort({ createdAt: -1 });
-      io.emit("job-added", jobs);
+      await Job.create({
+        ...job,
+        deadline: new Date(job.deadline),
+      });
+      await showJobs(io);
     } catch (error) {
-      socket.emit("orderError", { error: "Failed to fetch orders" });
+      socket.emit("orderError", { error: error.message });
     }
   });
 }
