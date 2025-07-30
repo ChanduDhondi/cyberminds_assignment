@@ -1,17 +1,7 @@
 const socket = require("../../../Programming/projects/grobite/backend/socket");
 const Job = require("./models/jobModel");
 
-async function showJobs(io) {
-  try {
-    const allJobs = await Job.find().sort({ createdAt: -1 });
-    io.emit("show-jobs", allJobs);
-  } catch (error) {
-    io.emit("orderError", { error: "Failed to fetch orders" });
-  }
-}
-
 async function handleSocket(socket, io) {
-  await showJobs(io);
   socket.on("new-job-created", async (job) => {
     try {
       await Job.create({
@@ -21,6 +11,15 @@ async function handleSocket(socket, io) {
       await showJobs(io);
     } catch (error) {
       socket.emit("orderError", { error: error.message });
+    }
+  });
+
+  socket.on("get-all-jobs", async () => {
+    try {
+      const allJobs = await Job.find().sort({ createdAt: -1 });
+      socket.emit("show-jobs", allJobs);
+    } catch (error) {
+      socket.emit("orderError", { error: "Failed to fetch jobs" });
     }
   });
 }

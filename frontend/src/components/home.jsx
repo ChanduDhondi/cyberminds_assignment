@@ -15,20 +15,26 @@ export default function Home() {
     jobType: "",
     salaryRange: [0, 200000],
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     socket.on("orderError", (data) => {
       alert(`Error: ${data.error}`);
+      setLoading(false);
     });
     socket.on("show-jobs", (allJobs) => {
-      console.log(allJobs);
       setAllJobs(allJobs);
+      setLoading(false);
     });
+
+    socket.emit("get-all-jobs");
+
     return () => {
       socket.off("orderError");
       socket.off("show-jobs");
     };
   }, []);
+  if (loading) return;
 
   const filteredJobs = allJobs.filter((job) => {
     const matchesSearch = job.title

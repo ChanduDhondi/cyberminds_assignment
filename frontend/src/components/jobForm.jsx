@@ -52,7 +52,11 @@ export default function JobForm({ onSubmit }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-xl mx-auto">
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-xl mx-auto"
+      name="job-form"
+    >
       <h2 className="text-xl font-medium text-center pb-6">
         Create Job Opening
       </h2>
@@ -153,6 +157,7 @@ export default function JobForm({ onSubmit }) {
           <div className="grid grid-cols-2 gap-2">
             <input
               name="salaryMin"
+              id="salary"
               type="number"
               placeholder="₹ min"
               onChange={handleChange}
@@ -161,6 +166,7 @@ export default function JobForm({ onSubmit }) {
             />
             <input
               name="salaryMax"
+              id="salary"
               type="number"
               placeholder="₹ max"
               onChange={handleChange}
