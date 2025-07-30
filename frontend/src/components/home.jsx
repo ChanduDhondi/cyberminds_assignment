@@ -4,7 +4,7 @@ import JobForm from "./jobForm";
 import { io } from "socket.io-client";
 import JobCard from "./jobCard";
 
-const socket = io("http://localhost:8080");
+const socket = io("https://cyberminds-chandu.onrender.com");
 
 export default function Home() {
   const [showCreateJob, setShowCreateJob] = useState(false);
