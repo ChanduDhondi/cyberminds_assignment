@@ -1,14 +1,11 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { Slider } from "@mui/material";
 import logo from "../assets/logo.png";
 import search from "../assets/search.png";
 import vector from "../assets/Vector.png";
 import location from "../assets/location.png";
 
-export default function Header({ onCreateJobClick }) {
-  const [salaryRange, setSalaryRange] = useState([50, 80]);
-
+export default function Header({ onCreateJobClick, filters, setFilters }) {
   return (
     <header className="bg-white shadow">
       <div className="flex justify-center w-full pt-3">
@@ -50,6 +47,9 @@ export default function Header({ onCreateJobClick }) {
             type="text"
             placeholder="Search By Job Title, Role"
             className="w-full outline-none"
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, search: e.target.value }))
+            }
           />
         </div>
 
@@ -60,18 +60,27 @@ export default function Header({ onCreateJobClick }) {
             alt="location"
             className="text-gray-500 mr-2"
           ></img>
-          <select className="w-full outline-none">
-            <option>Preferred Location</option>
-            <option>Chennai</option>
-            <option>Bangalore</option>
-            <option>Hyderabad</option>
-          </select>
+          <input
+            type="text"
+            placeholder="Preferred Location"
+            className="w-full outline-none"
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, location: e.target.value }))
+            }
+          />
         </div>
 
         {/* Job Type */}
         <div className="flex items-center gap-4 px-3 py-2 w-1/4">
           <img src={vector} alt="vector" className="text-gray-500 mr-2"></img>
-          <select className="w-full outline-none">
+          <select
+            className="w-full outline-none"
+            value={filters.jobType}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, jobType: e.target.value }))
+            }
+          >
+            <option value="">Select Type</option>
             <option>Full Time</option>
             <option>Internship</option>
             <option>Part Time</option>
@@ -82,13 +91,15 @@ export default function Header({ onCreateJobClick }) {
         {/* Salary Range */}
         <div className="flex flex-col px-6 py-2 w-1/4">
           <label className="text-sm text-gray-600">
-            Salary Per Month: ₹{salaryRange[0]}k - ₹{salaryRange[1]}k
+            Salary Per Month: ₹0k - ₹200000k
           </label>
           <Slider
-            value={salaryRange}
-            onChange={(e, newValue) => setSalaryRange(newValue)}
+            value={filters.salaryRange}
+            onChange={(e, newValue) =>
+              setFilters((prev) => ({ ...prev, salaryRange: newValue }))
+            }
             valueLabelDisplay="auto"
-            min={10000}
+            min={0}
             max={200000}
             step={5000}
             className="px-3 "

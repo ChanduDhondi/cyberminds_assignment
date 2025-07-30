@@ -9,6 +9,12 @@ const socket = io("http://localhost:8080");
 export default function Home() {
   const [showCreateJob, setShowCreateJob] = useState(false);
   const [allJobs, setAllJobs] = useState([]);
+  const [filters, setFilters] = useState({
+    search: "",
+    location: "",
+    jobType: "",
+    salaryRange: [0, 200000],
+  });
 
   useEffect(() => {
     socket.on("orderError", (data) => {
@@ -24,17 +30,41 @@ export default function Home() {
     };
   }, []);
 
+  const filteredJobs = allJobs.filter((job) => {
+    const matchesSearch = job.title
+      .toLowerCase()
+      .includes(filters.search.toLowerCase());
+
+    const matchesLocation = job.location
+      .toLowerCase()
+      .includes(filters.location.toLowerCase());
+
+    const matchesJobType = filters.jobType
+      ? job.jobType === filters.jobType
+      : true;
+
+    const matchesSalary =
+      parseInt(job.salaryMin || 0) >= filters.salaryRange[0] &&
+      parseInt(job.salaryMax || 0) <= filters.salaryRange[1];
+
+    return matchesSearch && matchesLocation && matchesJobType && matchesSalary;
+  });
+
   function onSubmit(job) {
     socket.emit("new-job-created", job);
     setShowCreateJob(false);
   }
   return (
     <>
-      <Header onCreateJobClick={() => setShowCreateJob(true)} />
+      <Header
+        onCreateJobClick={() => setShowCreateJob(true)}
+        filters={filters}
+        setFilters={setFilters}
+      />
       <div className="p-8" style={{ background: "rgba(0,0,0,0.01)" }}>
         {allJobs.length > 0 ? (
           <div className="grid grid-cols-4 gap-3">
-            {allJobs.map((job, index) => (
+            {filteredJobs.map((job, index) => (
               <JobCard job={job} key={index} />
             ))}
           </div>
