@@ -10,7 +10,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", "https://cyberminds-chandu.netlify.app"],
+    origin: ["https://cyberminds-chandu.netlify.app", "http://localhost:5173"],
     methods: ["GET", "POST"],
   },
 });
@@ -19,7 +19,7 @@ setupSocket(io);
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://cyberminds-chandu.netlify.app"],
+    origin: ["https://cyberminds-chandu.netlify.app", "http://localhost:5173"],
     methods: ["GET", "POST"],
     credentials: true,
   })
