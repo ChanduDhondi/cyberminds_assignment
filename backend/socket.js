@@ -7,7 +7,8 @@ async function handleSocket(socket, io) {
         ...job,
         deadline: new Date(job.deadline),
       });
-      await showJobs(io);
+      const allJobs = await Job.find().sort({ createdAt: -1 });
+      socket.emit("show-jobs", allJobs);
     } catch (error) {
       socket.emit("orderError", { error: error.message });
     }
